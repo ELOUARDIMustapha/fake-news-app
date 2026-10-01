@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+venv/
+.venv/
+
+# Données et modèles (trop volumineux pour GitHub)
+*.zip
+*.csv
+*.h5
+*.keras
+*.pkl
+
+# Fichiers générés par le notebook
+app.py
+logs.txt
+
+# Secrets
+.env
