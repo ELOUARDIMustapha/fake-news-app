@@ -42,14 +42,25 @@ Le notebook est organisé en sections numérotées :
 
 ## Résultats
 
-Résultats de la **première version** du notebook (`archive/mon_projet_v1.ipynb`), sur 12 749 articles de test :
+Évaluation sur le jeu de test (20 % des articles, découpage stratifié), après suppression du préfixe `VILLE (Reuters) -` :
 
 | Modèle               | Accuracy | F1-score (macro) |
 |----------------------|----------|------------------|
-| TF-IDF + LinearSVC   | 99,28 %  | 0,99             |
-| LSTM (5 époques)     | 98,86 %  | 0,99             |
+| **TF-IDF + LinearSVC** | **99,02 %** | **99,00 %**  |
+| LSTM                 | 98,25 %  | 98,23 %          |
 
-**Limite connue :** dans ce dataset, presque tous les articles réels commencent par `VILLE (Reuters) -`, ce qui n'est presque jamais le cas des articles faux. Le modèle peut donc apprendre à reconnaître la source plutôt que le contenu. La version actuelle retire ce préfixe avant l'entraînement (paramètre `REMOVE_SOURCE_PREFIX = True`), ce qui donne une évaluation plus honnête. Les scores obtenus peuvent donc être un peu plus bas que ceux de la première version.
+**Le modèle TF-IDF + LinearSVC obtient les meilleurs résultats.** Il est aussi beaucoup plus rapide à entraîner que le LSTM.
+
+### Pourquoi supprimer le préfixe « (Reuters) » ?
+
+Dans ce dataset, presque tous les articles réels commencent par `VILLE (Reuters) -`, ce qui n'est presque jamais le cas des articles faux. Sans traitement, un modèle peut apprendre à reconnaître **la source** plutôt que **le contenu**. Ce préfixe est donc retiré avant l'entraînement (paramètre `REMOVE_SOURCE_PREFIX = True`).
+
+| Version | Biais Reuters | TF-IDF + LinearSVC | LSTM |
+|---|---|---|---|
+| Première version (`archive/mon_projet_v1.ipynb`) | présent | 99,28 % | 98,86 % |
+| Version actuelle | **retiré** | 99,02 % | 98,25 % |
+
+Les scores restent supérieurs à 98 % après suppression du biais : les modèles s'appuient bien sur le contenu des articles. Leurs performances sur des articles venant d'autres sources ou d'autres périodes restent toutefois à vérifier.
 
 ## Exécution
 
