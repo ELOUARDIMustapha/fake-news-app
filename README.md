@@ -57,7 +57,7 @@ Dans ce dataset, presque tous les articles réels commencent par `VILLE (Reuters
 
 | Version | Biais Reuters | TF-IDF + LinearSVC | LSTM |
 |---|---|---|---|
-| Première version (`archive/mon_projet_v1.ipynb`) | présent | 99,28 % | 98,86 % |
+| Première version | présent | 99,28 % | 98,86 % |
 | Version actuelle | **retiré** | 99,02 % | 98,25 % |
 
 Les scores restent supérieurs à 98 % après suppression du biais : les modèles s'appuient bien sur le contenu des articles. Leurs performances sur des articles venant d'autres sources ou d'autres périodes restent toutefois à vérifier.
@@ -83,8 +83,6 @@ pip install -r requirements.txt
 ```
 .
 ├── mon_projet.ipynb          # Notebook complet : données, prétraitement, modèles, interface
-├── archive/
-│   └── mon_projet_v1.ipynb   # Première version du notebook (avec ses résultats)
 ├── requirements.txt          # Dépendances Python
 └── README.md
 ```
