@@ -6,6 +6,6 @@ wordcloud
 nltk
 scikit-learn
 tensorflow
-gensim
+joblib
 streamlit
 pyngrok

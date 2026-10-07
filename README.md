@@ -24,45 +24,42 @@ Le dataset n'est pas inclus dans ce dépôt. Le notebook l'attend sous forme d'a
 
 ## Démarche
 
-1. **Importation** des données depuis Google Drive.
-2. **Prétraitement**
-   - suppression des doublons et des textes trop courts ;
-   - analyse exploratoire : répartition des classes, longueur des textes, mots les plus fréquents, nuage de mots ;
-   - nettoyage : minuscules, suppression des liens, des chiffres, de la ponctuation et des *stopwords* ;
-   - tokenisation (NLTK) et lemmatisation (WordNet).
-3. **Modélisation**
-   - **TF-IDF + LinearSVC** dans un pipeline scikit-learn ;
-   - **LSTM** (Keras) : Embedding (100) → LSTM (150) → GlobalMaxPooling → Dense (64) → Dense (2), avec Dropout 0,5.
-4. **Exploration** de représentations complémentaires : TF-IDF limité à 5 000 mots et Word2Vec (gensim).
-5. **Interface** web avec **Streamlit**, exposée publiquement via **ngrok**.
+Le notebook est organisé en sections numérotées :
+
+0. **Configuration** : tous les paramètres (chemins, taille du vocabulaire, nombre d'époques…) sont regroupés dans une seule cellule.
+1. **Chargement** des données depuis Google Drive, suppression des doublons et des textes vides.
+2. **Analyse exploratoire** : répartition des classes, longueur des textes, vérification du biais « (Reuters) ».
+3. **Prétraitement** dans un fichier `preprocessing.py`, utilisé à la fois pour l'entraînement et par l'application :
+   suppression du préfixe de source, minuscules, liens, chiffres, ponctuation, *stopwords*, lemmatisation (WordNet).
+4. **Visualisation du vocabulaire** : mots les plus fréquents et nuage de mots, pour chaque classe.
+5. **Séparation train / test** (80 / 20, stratifiée) : un seul découpage, commun aux deux modèles.
+6. **Modèle 1 : TF-IDF (unigrammes + bigrammes) + LinearSVC**, avec les mots les plus discriminants.
+7. **Modèle 2 : LSTM** (Keras) : Embedding → LSTM → GlobalMaxPooling → Dense → sortie sigmoïde, avec validation et *early stopping*.
+8. **Comparaison** des deux modèles (accuracy, F1).
+9. **Test** sur un nouveau texte.
+10. **Sauvegarde** des modèles dans Google Drive.
+11. **Interface web** Streamlit, accessible via ngrok.
 
 ## Résultats
 
-Évaluation sur un jeu de test de 12 749 articles (33 % des données) :
+Résultats de la **première version** du notebook (`archive/mon_projet_v1.ipynb`), sur 12 749 articles de test :
 
 | Modèle               | Accuracy | F1-score (macro) |
 |----------------------|----------|------------------|
 | TF-IDF + LinearSVC   | 99,28 %  | 0,99             |
 | LSTM (5 époques)     | 98,86 %  | 0,99             |
 
-Matrice de confusion du modèle TF-IDF + LinearSVC :
-
-|                  | Prédit FAKE | Prédit REAL |
-|------------------|-------------|-------------|
-| **Réel FAKE**    | 5 714       | 60          |
-| **Réel REAL**    | 32          | 6 943       |
-
-**Limite connue :** dans ce dataset, la plupart des articles réels commencent par `WASHINGTON (Reuters) -`. Le modèle peut donc en partie apprendre à reconnaître le style ou la source de l'article plutôt que la véracité de son contenu. Les scores très élevés doivent être interprétés avec prudence, et les performances seront probablement plus faibles sur des articles provenant d'autres sources.
+**Limite connue :** dans ce dataset, presque tous les articles réels commencent par `VILLE (Reuters) -`, ce qui n'est presque jamais le cas des articles faux. Le modèle peut donc apprendre à reconnaître la source plutôt que le contenu. La version actuelle retire ce préfixe avant l'entraînement (paramètre `REMOVE_SOURCE_PREFIX = True`), ce qui donne une évaluation plus honnête. Les scores obtenus peuvent donc être un peu plus bas que ceux de la première version.
 
 ## Exécution
 
 1. Ouvrir le notebook dans Colab avec le badge **Open in Colab** ci-dessus.
 2. Placer `dataset_fake_news.zip` dans `MyDrive/mon_projet/` sur Google Drive.
-3. Exécuter les cellules dans l'ordre (un GPU est recommandé pour le LSTM : *Exécution → Modifier le type d'exécution*).
+3. Activer le GPU (*Exécution → Modifier le type d'exécution → GPU*), puis lancer *Exécution → Tout exécuter*.
 4. Pour l'interface Streamlit :
    - créer un compte gratuit sur [ngrok](https://ngrok.com) et récupérer un *authtoken* ;
    - dans Colab, l'ajouter dans les **Secrets** (icône 🔑) sous le nom `NGROK_AUTHTOKEN` ;
-   - exécuter les cellules de la section **Interface** : un lien public vers l'application s'affiche.
+   - exécuter les cellules de la section **11. Interface Streamlit** : un lien public vers l'application s'affiche.
 
 Pour une installation locale :
 
@@ -74,16 +71,18 @@ pip install -r requirements.txt
 
 ```
 .
-├── mon_projet.ipynb   # Notebook complet : données, prétraitement, modèles, interface
-├── requirements.txt   # Dépendances Python
+├── mon_projet.ipynb          # Notebook complet : données, prétraitement, modèles, interface
+├── archive/
+│   └── mon_projet_v1.ipynb   # Première version du notebook (avec ses résultats)
+├── requirements.txt          # Dépendances Python
 └── README.md
 ```
 
-Les fichiers générés (`model_lstm.h5`, `tokenizer.pkl`, `app.py`) ne sont pas versionnés.
+Les fichiers générés par le notebook (`preprocessing.py`, `app.py`) et les modèles sauvegardés dans Google Drive (`models/`) ne sont pas versionnés.
 
 ## Technologies
 
-Python · pandas · NLTK · scikit-learn · TensorFlow / Keras · gensim · matplotlib · seaborn · WordCloud · Streamlit · ngrok
+Python · pandas · NLTK · scikit-learn · TensorFlow / Keras · matplotlib · seaborn · WordCloud · Streamlit · ngrok
 
 ## Auteur
 
