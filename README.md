@@ -6,7 +6,7 @@ Projet de fin d'études (Master) : détection automatique des fausses informatio
 
 ## Problématique
 
-La diffusion rapide de fausses informations sur Internet et les réseaux sociaux rend leur vérification manuelle impossible à grande échelle. L'objectif est de construire un modèle capable de classer un article comme **FAKE** ou **REAL** à partir de son seul texte, puis de le rendre utilisable via une interface web.
+La diffusion rapide de fausses informations sur Internet et les réseaux sociaux rend leur vérification manuelle impossible à grande échelle. L'objectif est de construire un modèle capable de classer un article comme **FAKE** ou **REAL** à partir de son seul texte.
 
 ## Dataset
 
@@ -29,7 +29,7 @@ Le notebook est organisé en sections numérotées :
 0. **Configuration** : tous les paramètres (chemins, taille du vocabulaire, nombre d'époques…) sont regroupés dans une seule cellule.
 1. **Chargement** des données depuis Google Drive, suppression des doublons et des textes vides.
 2. **Analyse exploratoire** : répartition des classes, longueur des textes, vérification du biais « (Reuters) ».
-3. **Prétraitement** dans un fichier `preprocessing.py`, utilisé à la fois pour l'entraînement et par l'application :
+3. **Prétraitement** dans un fichier `preprocessing.py`, utilisé pour l'entraînement et pour les prédictions :
    suppression du préfixe de source, minuscules, liens, chiffres, ponctuation, *stopwords*, lemmatisation (WordNet).
 4. **Visualisation du vocabulaire** : mots les plus fréquents et nuage de mots, pour chaque classe.
 5. **Séparation train / test** (80 / 20, stratifiée) : un seul découpage, commun aux deux modèles.
@@ -38,7 +38,6 @@ Le notebook est organisé en sections numérotées :
 8. **Comparaison** des deux modèles (accuracy, F1).
 9. **Test** sur un nouveau texte.
 10. **Sauvegarde** des modèles dans Google Drive.
-11. **Interface web** Streamlit, accessible via ngrok.
 
 ## Résultats
 
@@ -67,10 +66,6 @@ Les scores restent supérieurs à 98 % après suppression du biais : les modèle
 1. Ouvrir le notebook dans Colab avec le badge **Open in Colab** ci-dessus.
 2. Placer `dataset_fake_news.zip` dans `MyDrive/mon_projet/` sur Google Drive.
 3. Activer le GPU (*Exécution → Modifier le type d'exécution → GPU*), puis lancer *Exécution → Tout exécuter*.
-4. Pour l'interface Streamlit :
-   - créer un compte gratuit sur [ngrok](https://ngrok.com) et récupérer un *authtoken* ;
-   - dans Colab, l'ajouter dans les **Secrets** (icône 🔑) sous le nom `NGROK_AUTHTOKEN` ;
-   - exécuter les cellules de la section **11. Interface Streamlit** : un lien public vers l'application s'affiche.
 
 Pour une installation locale :
 
@@ -82,16 +77,16 @@ pip install -r requirements.txt
 
 ```
 .
-├── mon_projet.ipynb          # Notebook complet : données, prétraitement, modèles, interface
+├── mon_projet.ipynb          # Notebook complet : données, prétraitement, modèles
 ├── requirements.txt          # Dépendances Python
 └── README.md
 ```
 
-Les fichiers générés par le notebook (`preprocessing.py`, `app.py`) et les modèles sauvegardés dans Google Drive (`models/`) ne sont pas versionnés.
+Le fichier généré par le notebook (`preprocessing.py`) et les modèles sauvegardés dans Google Drive (`models/`) ne sont pas versionnés.
 
 ## Technologies
 
-Python · pandas · NLTK · scikit-learn · TensorFlow / Keras · matplotlib · seaborn · WordCloud · Streamlit · ngrok
+Python · pandas · NLTK · scikit-learn · TensorFlow / Keras · matplotlib · seaborn · WordCloud
 
 ## Auteur
 
