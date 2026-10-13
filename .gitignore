@@ -13,9 +13,7 @@ venv/
 *.pkl
 
 # Fichiers générés par le notebook
-app.py
 preprocessing.py
-streamlit.log
 logs.txt
 
 # Secrets
